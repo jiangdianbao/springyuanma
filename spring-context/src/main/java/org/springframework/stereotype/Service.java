@@ -16,13 +16,9 @@
 
 package org.springframework.stereotype;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
 import org.springframework.core.annotation.AliasFor;
+
+import java.lang.annotation.*;
 
 /**
  * Indicates that an annotated class is a "Service", originally defined by Domain-Driven

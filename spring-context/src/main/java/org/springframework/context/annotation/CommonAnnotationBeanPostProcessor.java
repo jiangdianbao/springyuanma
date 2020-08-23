@@ -292,9 +292,17 @@ public class CommonAnnotationBeanPostProcessor extends InitDestroyAnnotationBean
 	}
 
 
+	/*
+	* 1、扫描类里面的属性或者方法
+	* 2、判断属性或者方法上面是否有@PostConstruct @PreDestroy @Resource注解
+	* 3、如果有注解的属性或者方法，包装成一个类
+	* */
 	@Override
 	public void postProcessMergedBeanDefinition(RootBeanDefinition beanDefinition, Class<?> beanType, String beanName) {
+
+		//扫描@PostConstruct @PreDestroy
 		super.postProcessMergedBeanDefinition(beanDefinition, beanType, beanName);
+		//扫描@Resource,扫描属性和方法上面是否有@Resource注解，如果有则收集起来封装成对象
 		InjectionMetadata metadata = findResourceMetadata(beanName, beanType, null);
 		metadata.checkConfigMembers(beanDefinition);
 	}
@@ -347,6 +355,7 @@ public class CommonAnnotationBeanPostProcessor extends InitDestroyAnnotationBean
 					if (metadata != null) {
 						metadata.clear(pvs);
 					}
+					//主要看这个方法
 					metadata = buildResourceMetadata(clazz);
 					this.injectionMetadataCache.put(cacheKey, metadata);
 				}

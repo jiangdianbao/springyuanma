@@ -522,6 +522,9 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 *  0：不重要，可以不看
 	 *  1：一般重要，可看可不看
 	 *  5：非常重要，一定要看
+	 *
+	 *
+	 *  必须读的 ：重要程度 5
 	 * */
 	@Override
 	public void refresh() throws BeansException, IllegalStateException {
@@ -530,9 +533,10 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			// Prepare this context for refreshing.
 			prepareRefresh();
 
-			/*
+			/**
 			   重要程度：5
 
+			 TODO ee
 			  1、创建BeanFactory对象
 			* 2、xml解析
 			* 	传统标签解析：bean、import等
@@ -549,31 +553,66 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			// Tell the subclass to refresh the internal bean factory.
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
+			/*
+			* 给beanFactory设置一些属性值，可以不看
+			* */
 			// Prepare the bean factory for use in this context.
 			prepareBeanFactory(beanFactory);
 
 			try {
+				//TODO
+				/*
+				*TODO
+				* */
 				// Allows post-processing of the bean factory in context subclasses.
 				postProcessBeanFactory(beanFactory);
 
+
+				/*
+				* BeanDefinitionRegistryPostProcessor
+				* BeanFactoryPostProcessor
+				* 完成对这两个接口的调用
+				* */
 				// Invoke factory processors registered as beans in the context.
 				invokeBeanFactoryPostProcessors(beanFactory);
 
+				/*
+				* 把实现了BeanPostProcessor接口的类实例化，并且加入到BeanFactory中
+				* */
 				// Register bean processors that intercept bean creation.
 				registerBeanPostProcessors(beanFactory);
 
+				/*
+				* 国际化,重要程度2
+				* */
 				// Initialize message source for this context.
 				initMessageSource();
 
+				//初始化事件管理类
 				// Initialize event multicaster for this context.
 				initApplicationEventMulticaster();
 
+				//这个方法着重理解模板设计模式，因为在springboot中，这个方法是用来做内嵌tomcat启动的
 				// Initialize other special beans in specific context subclasses.
 				onRefresh();
 
+				/*
+				* 往事件管理类中注册事件类
+				* */
 				// Check for listener beans and register them.
 				registerListeners();
 
+
+				/*
+				* 这个方法是spring中最重要的方法，没有之一
+				* 所以这个方法一定要理解要具体看
+				* 1、bean实例化过程
+				* 2、ioc
+				* 3、注解支持
+				* 4、BeanPostProcessor的执行
+				* 5、Aop的入口
+				*
+				* */
 				// Instantiate all remaining (non-lazy-init) singletons.
 				finishBeanFactoryInitialization(beanFactory);
 
@@ -846,6 +885,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 		// Do not initialize FactoryBeans here: We need to leave all regular beans
 		// uninitialized to let post-processors apply to them!
+		//获取到实现了ApplicationListener接口的类的名称
 		String[] listenerBeanNames = getBeanNamesForType(ApplicationListener.class, true, false);
 		for (String listenerBeanName : listenerBeanNames) {
 			getApplicationEventMulticaster().addApplicationListenerBean(listenerBeanName);
@@ -856,6 +896,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		this.earlyApplicationEvents = null;
 		if (earlyEventsToProcess != null) {
 			for (ApplicationEvent earlyEvent : earlyEventsToProcess) {
+
+				//多播事件,事件执行
 				getApplicationEventMulticaster().multicastEvent(earlyEvent);
 			}
 		}
@@ -866,6 +908,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * initializing all remaining singleton beans.
 	 */
 	protected void finishBeanFactoryInitialization(ConfigurableListableBeanFactory beanFactory) {
+
+		//设置类型转换器
 		// Initialize conversion service for this context.
 		if (beanFactory.containsBean(CONVERSION_SERVICE_BEAN_NAME) &&
 				beanFactory.isTypeMatch(CONVERSION_SERVICE_BEAN_NAME, ConversionService.class)) {
@@ -876,10 +920,12 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		// Register a default embedded value resolver if no bean post-processor
 		// (such as a PropertyPlaceholderConfigurer bean) registered any before:
 		// at this point, primarily for resolution in annotation attribute values.
+		//暂时不要看
 		if (!beanFactory.hasEmbeddedValueResolver()) {
 			beanFactory.addEmbeddedValueResolver(strVal -> getEnvironment().resolvePlaceholders(strVal));
 		}
 
+		//暂时不看
 		// Initialize LoadTimeWeaverAware beans early to allow for registering their transformers early.
 		String[] weaverAwareNames = beanFactory.getBeanNamesForType(LoadTimeWeaverAware.class, false, false);
 		for (String weaverAwareName : weaverAwareNames) {
@@ -892,6 +938,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		// Allow for caching all bean definition metadata, not expecting further changes.
 		beanFactory.freezeConfiguration();
 
+		//重点看这个方法，重要程度：5
 		// Instantiate all remaining (non-lazy-init) singletons.
 		beanFactory.preInstantiateSingletons();
 	}

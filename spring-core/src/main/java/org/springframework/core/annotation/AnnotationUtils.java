@@ -1155,8 +1155,10 @@ public abstract class AnnotationUtils {
 		Class<? extends Annotation> annotationType = annotation.annotationType();
 		AnnotationAttributes attributes = new AnnotationAttributes(annotationType);
 
+		//获取注解里面的方法
 		for (Method method : getAttributeMethods(annotationType)) {
 			try {
+				//注解里面方法的调用
 				Object attributeValue = method.invoke(annotation);
 				Object defaultValue = method.getDefaultValue();
 				if (defaultValue != null && ObjectUtils.nullSafeEquals(attributeValue, defaultValue)) {
