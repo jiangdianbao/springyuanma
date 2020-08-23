@@ -22,8 +22,6 @@ import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.core.env.EnvironmentCapable;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.lang.Nullable;
-import org.springframework.context.MessageSource;
-import org.springframework.context.ApplicationEventPublisher;
 
 /**
  * Central interface to provide configuration for an application.

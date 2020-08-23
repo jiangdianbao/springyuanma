@@ -166,7 +166,7 @@ import org.springframework.web.util.UrlPathHelper;
  * @author Rossen Stoyanchev
  * @author Brian Clozel
  * @author Sebastien Deleuze
- * @since 3.1addCorsMappings
+ * @since 3.1
  * @see EnableWebMvc
  * @see WebMvcConfigurer
  */
@@ -326,7 +326,6 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 	protected final Object[] getInterceptors() {
 		if (this.interceptors == null) {
 			InterceptorRegistry registry = new InterceptorRegistry();
-			//钩子方法，需要自己定义
 			addInterceptors(registry);
 			registry.addInterceptor(new ConversionServiceExposingInterceptor(mvcConversionService()));
 			registry.addInterceptor(new ResourceUrlProviderExposingInterceptor(mvcResourceUrlProvider()));
@@ -939,7 +938,6 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 		if (this.applicationContext != null) {
 			exceptionHandlerResolver.setApplicationContext(this.applicationContext);
 		}
-		//手动调用
 		exceptionHandlerResolver.afterPropertiesSet();
 		exceptionResolvers.add(exceptionHandlerResolver);
 

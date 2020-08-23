@@ -1422,7 +1422,7 @@ public class BeanDefinitionParserDelegate {
 	public BeanDefinitionHolder decorateIfRequired(
 			Node node, BeanDefinitionHolder originalDef, @Nullable BeanDefinition containingBd) {
 
-		//根据node获取到node的命名空间，形如：http://www.springframework.org/schema/p  p:username="Jack"
+		//根据node获取到node的命名空间，形如：http://www.springframework.org/schema/p
 		String namespaceUri = getNamespaceURI(node);
 		if (namespaceUri != null && !isDefaultNamespace(namespaceUri)) {
 
@@ -1431,7 +1431,6 @@ public class BeanDefinitionParserDelegate {
 			if (handler != null) {
 
 				//调用NamespaceHandler处理类的decorate方法，开始具体装饰过程，并返回装饰完的对象
-				//org.springframework.beans.factory.xml.SimplePropertyNamespaceHandler
 				BeanDefinitionHolder decorated =
 						handler.decorate(node, originalDef, new ParserContext(this.readerContext, this, containingBd));
 				if (decorated != null) {
